@@ -22,7 +22,7 @@ const Products = () => {
     const subject = `Order Request: ${selectedProduct.name}`;
     const body =
       `Hi Team,\n\n` +
-      `I’d like to place an order with the following details:\n\n` +
+      `I'd like to place an order with the following details:\n\n` +
       `- Product: ${selectedProduct.name}\n` +
       `- Price (listed): ${selectedProduct.salePrice}\n` +
       `- Quantity: 1\n\n` +
@@ -40,7 +40,7 @@ const Products = () => {
     if (!selectedProduct) return "#";
     const msg =
       `Hi Team,\n\n` +
-      `I&apos;d like to place an order with the following details:\n\n` +
+      `I'd like to place an order with the following details:\n\n` +
       `- Product: ${selectedProduct.name}\n` +
       `- Price (listed): ${selectedProduct.salePrice}\n` +
       `- Quantity: 1\n\n` +
