@@ -34,7 +34,7 @@ export async function POST(req) {
     const sheet = doc.sheetsByIndex[0];
 
     // Append row
-    sheet.addRow({
+    await sheet.addRow({
       Timestamp: new Date().toISOString(),
       OrderDate: new Date().toLocaleDateString(),
       OrderTime: new Date().toLocaleTimeString(),
