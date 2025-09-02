@@ -1,10 +1,48 @@
+'use client'
 import React, { useState } from "react";
 
 const Products = () => {
   const products = [
-    { id: 1, name: "Amazon GT2 Smart Watch", originalPrice: "$160.00", salePrice: "$130.00", rating: 5, reviews: "(5.6k Reviews)", color: "bg-blue-100" },
-    { id: 2, name: "Apple Smart Watch", originalPrice: "$160.00", salePrice: "$130.00", rating: 5, reviews: "(7.3k Reviews)", color: "bg-yellow-100" },
-    { id: 3, name: "Kieslect Ks Pro Smart Watch", originalPrice: "$160.00", salePrice: "$130.00", rating: 5, reviews: "(1.3k Reviews)", color: "bg-pink-100" },
+    { 
+      id: 1, 
+      name: "Amazon GT2 Smart Watch", 
+      originalPrice: "₹ 2,500.00", 
+      salePrice: "₹ 1,750.00", 
+      description: "Advanced fitness tracking",
+      discount: "-30%",
+      isNew: false,
+      image: "bg-gradient-to-br from-blue-100 to-blue-200"
+    },
+    { 
+      id: 2, 
+      name: "Apple Smart Watch", 
+      originalPrice: "₹ 5,000.00", 
+      salePrice: "₹ 4,000.00", 
+      description: "Premium smartwatch experience",
+      discount: "-20%",
+      isNew: false,
+      image: "bg-gradient-to-br from-gray-700 to-gray-900"
+    },
+    { 
+      id: 3, 
+      name: "Kieslect Ks Smart Watch", 
+      originalPrice: "₹ 1,800.00", 
+      salePrice: "₹ 900.00", 
+      description: "Professional fitness watch",
+      discount: "-50%",
+      isNew: false,
+      image: "bg-gradient-to-br from-gray-200 to-gray-300"
+    },
+    { 
+      id: 4, 
+      name: "Samsung Galaxy Watch", 
+      originalPrice: "₹ 3,200.00", 
+      salePrice: "₹ 2,880.00", 
+      description: "Smart health companion",
+      discount: "-10%",
+      isNew: true,
+      image: "bg-gradient-to-br from-amber-100 to-amber-200"
+    },
   ];
 
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -15,6 +53,7 @@ const Products = () => {
 
   const handleSubmit = async (e) => {
     if (e && e.preventDefault) e.preventDefault();
+    
     setIsSubmitting(true);
     setStatus("");
 
@@ -32,9 +71,6 @@ const Products = () => {
       productPrice: selectedProduct.salePrice,
       originalPrice: selectedProduct.originalPrice,
       productId: selectedProduct.id,
-      timestamp: new Date().toISOString(),
-      orderDate: new Date().toLocaleDateString(),
-      orderTime: new Date().toLocaleTimeString()
     };
 
     try {
@@ -48,61 +84,82 @@ const Products = () => {
 
       const responseData = await res.json();
 
-      if (responseData) {
-        setSubmitted(true);
-        setIsSubmitting(false); 
+      // Check for success using multiple conditions
+      if (res.ok ) {
+        
+        setSubmitted(false);
         setStatus("Order submitted successfully!");
-        // ✅ stop spinner immediately
-
-        // Close modal automatically after 2s
+        
+        // Close modal automatically after 4s
         setTimeout(() => {
-          setSelectedProduct(null);  // closes modal
+          setSelectedProduct(null);
           setSubmitted(false);
           setEmail("");
           setStatus("");
         }, 4000);
       } else {
-        setStatus(responseData.message || "Failed to submit order. Please try again.");
-        setIsSubmitting(false); // ✅ stop spinner on failure
+        const errorMessage = responseData.error || responseData.message || "Failed to submit order";
+        setStatus(errorMessage);
       }
     } catch (error) {
       setStatus("Network error. Please check your connection and try again.");
-      console.error("Submission error:", error);
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-12">
-      <h2 className="text-xl sm:text-2xl text-slate-900 font-bold mb-8">
-        Best Deals for You 🔥
-      </h2>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 py-16 bg-gray-50 min-h-screen">
+      <h1 className="text-3xl sm:text-4xl text-gray-800 font-bold mb-12 text-center">
+        Our Products
+      </h1>
 
       {/* Product Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <div
             key={product.id}
-            className="bg-white rounded-2xl p-6 flex flex-col items-center shadow-md hover:shadow-xl transition"
+            className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl hover:scale-105 transition-all duration-300 group"
           >
-            <div className={`w-28 h-28 sm:w-32 sm:h-32 ${product.color} rounded-xl flex items-center justify-center mb-4`}>
-              <div className="w-16 h-16 sm:w-20 sm:h-20 bg-gray-300 rounded-lg"></div>
+            {/* Product Image Area */}
+            <div className={`relative h-56 ${product.image} flex items-center justify-center`}>
+              {/* New Badge */}
+              {product.isNew && (
+                <div className="absolute top-4 right-4 bg-teal-500 text-white text-xs font-semibold px-2 py-1 rounded-full">
+                  New
+                </div>
+              )}
+              
+              {/* Product Placeholder */}
+              <div className="w-24 h-24 bg-white bg-opacity-30 rounded-2xl flex items-center justify-center">
+                <div className="w-16 h-16 bg-gray-400 rounded-xl opacity-60"></div>
+              </div>
             </div>
 
-            <h3 className="font-semibold text-slate-600 text-base sm:text-lg text-center">
-              {product.name}
-            </h3>
-            <div className="flex items-center gap-2 mt-2">
-              <p className="text-gray-500 text-sm line-through">{product.originalPrice}</p>
-              <p className="text-red-500 font-bold">{product.salePrice}</p>
+            {/* Product Details */}
+            <div className="p-6">
+              <h3 className="font-bold text-lg text-gray-800 mb-1 group-hover:text-blue-600 transition-colors">
+                {product.name}
+              </h3>
+              <p className="text-gray-500 text-sm mb-4">
+                {product.description}
+              </p>
+              
+              {/* Price */}
+              <div className="flex items-center gap-2 mb-4">
+                <span className="text-xl font-bold text-gray-800">{product.salePrice}</span>
+              </div>
+
+              {/* Action Buttons */}
+              <div className="space-y-3">
+                <button
+                  onClick={() => setSelectedProduct(product)}
+                  className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
+                >
+                  Place an Order
+                </button>
+              </div>
             </div>
-            <button
-              className="mt-4 px-4 py-2 w-full sm:w-auto bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-              onClick={() => setSelectedProduct(product)}
-            >
-              Order Now
-            </button>
           </div>
         ))}
       </div>
@@ -136,7 +193,7 @@ const Products = () => {
                 <span className="text-sm text-gray-600">Price:</span>
                 <div className="flex items-center gap-2">
                   <span className="text-gray-400 line-through text-sm">{selectedProduct.originalPrice}</span>
-                  <span className="text-red-500 font-bold">{selectedProduct.salePrice}</span>
+                  <span className="text-blue-600 font-bold">{selectedProduct.salePrice}</span>
                 </div>
               </div>
             </div>

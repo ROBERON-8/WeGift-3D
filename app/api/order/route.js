@@ -12,11 +12,11 @@ export async function POST(req) {
     try {
       body = await req.json();
     } catch (err) {
-      return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
+      return NextResponse.json({ ok: false, error: "Invalid JSON body" }, { status: 400 });
     }
 
     if (!SHEET_ID || !CLIENT_EMAIL || !PRIVATE_KEY) {
-      return NextResponse.json({ error: "Missing Google Sheets credentials" }, { status: 500 });
+      return NextResponse.json({ ok: false, error: "Missing Google Sheets credentials" }, { status: 500 });
     }
 
     // Authenticate
@@ -27,14 +27,13 @@ export async function POST(req) {
       },
       scopes: ["https://www.googleapis.com/auth/spreadsheets"],
     });
-
     // Connect to sheet
     const doc = new GoogleSpreadsheet(SHEET_ID, auth);
     await doc.loadInfo();
     const sheet = doc.sheetsByIndex[0];
 
-    // Append row
-    await sheet.addRow({
+    // Append row - use the data from frontend
+    sheet.addRow({
       Timestamp: new Date().toISOString(),
       OrderDate: new Date().toLocaleDateString(),
       OrderTime: new Date().toLocaleTimeString(),
@@ -45,13 +44,20 @@ export async function POST(req) {
       ProductId: body.productId,
       Status: "Pending",
     });
-
-    // ✅ Respond immediately with ok: true
-    return NextResponse.json({ ok: true, message: "Order saved!" }, { status: 200 });
+    
+    // Return success response
+    return NextResponse.json({ 
+      ok: true, 
+      success: true,
+      message: "Order saved successfully!" 
+    }, { status: 200 });
 
   } catch (error) {
-    console.error("❌ API error:", error);
-    // Respond with ok: false
-    return NextResponse.json({ ok: false, error: "Failed to save order", details: error.message }, { status: 500 });
+    return NextResponse.json({ 
+      ok: false, 
+      success: false,
+      error: "Failed to save order", 
+      details: error.message 
+    }, { status: 500 });
   }
 }

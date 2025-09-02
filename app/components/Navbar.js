@@ -1,84 +1,82 @@
-"use client";
-import React, { useState } from "react";
-import Link from "next/link";
-import { Heart, ShoppingCart, Menu, X } from "lucide-react";
+'use client'
 
-const Navbar = () => {
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+import { useState } from 'react'
+import Image from 'next/image';
+
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+
+    const scrollToProducts = () => {
+    const el = document.getElementById("products");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToAbout = () => {
+    const el = document.getElementById("about");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+  const scrollToContact = () => {
+    const el=document.getElementById("contact");
+    if(el) el.scrollIntoView({behavior:"smooth"});
+  };
 
   return (
-    <>
-      {/* Header */}
-      <header className="bg-white shadow-sm sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="flex items-center justify-between h-16">
-            {/* Logo */}
-            <div className="flex items-center">
-              <span className="text-2xl text-gray-800 font-bold">
-                We<span className="text-red-500">Gift 3D</span>
-              </span>
-            </div>
-
-            {/* Search Bar (hidden on small screens) */}
-            <div className="hidden md:flex flex-1 max-w-lg mx-8">
-              <div className="relative w-full">
-                <input
-                  type="text"
-                  placeholder="Search all Product"
-                  className="w-full pl-4 pr-12 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-4 py-1 rounded text-sm">
-                  Search
-                </button>
-              </div>
-            </div>
-
-            {/* Right Icons */}
-            <div className="flex items-center space-x-4 md:space-x-6">
-              <Heart className="w-6 h-6 text-gray-600 cursor-pointer" />
-              <ShoppingCart className="w-6 h-6 text-gray-600 cursor-pointer" />
-
-              {/* Mobile Menu Toggle */}
-              <button
-                className="md:hidden text-gray-600"
-                onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              >
-                {mobileMenuOpen ? <X size={28} /> : <Menu size={28} />}
-              </button>
-            </div>
-          </div>
+    <nav className="absolute top-0 left-0 w-full z-50 px-6 lg:px-12 py-6">
+      <div className="flex items-center justify-between">
+        {/* Logo */}
+        <div className='flex items-center'>
+        <Image src='/wegift logo.png' alt='WEGIFT-3D Logo' width={80} height={100} className="h-8" />
+        <div className="font-playfair text-xl lg:text-2xl font-semibold tracking-wider">
+          WEGIFT-<span className="text-accent text-yellow-400">3D</span>
+        </div>
         </div>
 
-        {/* Mobile Dropdown Menu */}
-        {mobileMenuOpen && (
-          <div className="md:hidden bg-white shadow-md border-t">
-            <div className="px-4 py-3 space-y-3">
-              {/* Mobile Search Bar */}
-              <div className="relative">
-                <input
-                  type="text"
-                  placeholder="Search all Product"
-                  className="w-full pl-4 pr-12 py-2 border border-gray-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                />
-                <button className="absolute right-2 top-1/2 transform -translate-y-1/2 bg-blue-600 text-white px-3 py-1 rounded text-sm">
-                  Go
-                </button>
-              </div>
+        {/* Desktop Navigation */}
+        <div className="hidden md:flex items-center space-x-8 lg:space-x-12">
+          <button   className="text-sm lg:text-base font-medium hover:text-gray-300 hover:cursor-pointer transition-colors duration-300 tracking-wide" onClick={scrollToProducts}>
+            COLLECTION
+          </button>
+          <button   className="text-sm lg:text-base font-medium hover:text-gray-300 hover:cursor-pointer transition-colors duration-300 tracking-wide" onClick={scrollToAbout}>
+            ABOUT
+          </button>
+          {/* <button  ="stores" className="text-sm lg:text-base font-medium hover:text-gray-300 transition-colors duration-300 tracking-wide">
+            STORES
+          </button> */}
+          <button   className="text-sm lg:text-base font-medium hover:text-gray-300 hover:cursor-pointer transition-colors duration-300 tracking-wide" onClick={scrollToContact}>
+            CONTACT
+          </button>
+        </div>
 
-              {/* Links */}
-              <nav className="flex flex-col space-y-2">
-                <Link href="/" className="text-gray-700 hover:text-red-500">Home</Link>
-                <Link href="/products" className="text-gray-700 hover:text-red-500">Products</Link>
-                <Link href="/about" className="text-gray-700 hover:text-red-500">About</Link>
-                <Link href="/contact" className="text-gray-700 hover:text-red-500">Contact</Link>
-                <Link href="/offers" className="text-red-500 font-semibold">Special Offers</Link>
-              </nav>
-            </div>
+        {/* Mobile Menu Button */}
+        <button 
+          className="md:hidden flex flex-col space-y-1"
+          onClick={() => setIsOpen(!isOpen)}
+        >
+          <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? 'rotate-45 translate-y-1.5' : ''}`}></span>
+          <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? 'opacity-0' : ''}`}></span>
+          <span className={`w-6 h-0.5 bg-white transition-all duration-300 ${isOpen ? '-rotate-45 -translate-y-1.5' : ''}`}></span>
+        </button>
+      </div>
+
+      {/* Mobile Menu */}
+      {isOpen && (
+        <div className="md:hidden mt-6 py-6 border-t border-gray-700">
+          <div className="flex flex-col space-y-4">
+            <button  className="text-lg font-medium hover:text-gray-300 transition-colors tracking-wide" onClick={scrollToProducts}>
+              COLLECTION
+            </button>
+            <button   className="text-lg font-medium hover:text-gray-300 transition-colors tracking-wide" onClick={scrollToAbout}>
+              ABOUT
+            </button>
+            {/* <button  ="stores" className="text-lg font-medium hover:text-gray-300 transition-colors tracking-wide">
+              STORES
+            </button> */}
+            <button   className="text-lg font-medium hover:text-gray-300 transition-colors tracking-wide" onClick={scrollToContact}>
+              CONTACT
+            </button>
           </div>
-        )}
-      </header>
-    </>
-  );
-};
-
-export default Navbar;
+        </div>
+      )}
+    </nav>
+  )
+}

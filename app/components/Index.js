@@ -1,50 +1,106 @@
-import React from "react";
+"use client";
+import { useState, useEffect } from "react";
 import Image from "next/image";
+import { LiaLongArrowAltDownSolid } from "react-icons/lia";
+import useEmblaCarousel from "embla-carousel-react";
+import Autoplay from "embla-carousel-autoplay";
 
-const Index = () => {
+export default function HeroSection() {
+  const [isLoaded, setIsLoaded] = useState(false);
+
+  // Embla setup with autoplay
+  const [emblaRef] = useEmblaCarousel(
+    { loop: true, align: "start" },
+    [Autoplay({ delay: 3000 })]
+  );
+
+  const images = ["/bg_hero.png", "/decor.png"];
+
+  const scrollToProducts = () => {
+    const el = document.getElementById("products");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const scrollToNext = () => {
+    const el = document.getElementById("about");
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(() => {
+    setIsLoaded(true);
+  }, []);
+
   return (
-    <div>
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8 relative">
-        {/* Hero Section */}
-        <div className="bg-gradient-to-r from-slate-800 to-slate-900 rounded-3xl p-8 md:p-12 text-white relative overflow-hidden flex flex-col md:flex-row items-center md:items-start">
+    <section className="relative min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-black overflow-hidden z-10">
+      {/* SVG Wave Line */}
+      <Image
+        src="/Vector 1.png"
+        alt="Wave"
+        fill
+        className="absolute top-1/2 left-0 w-full h-40 z-0 pointer-events-none opacity-60"
+      />
+
+      {/* Container */}
+      <div className="relative flex items-center min-h-screen px-6 lg:px-12 z-10">
+        <div className="grid lg:grid-cols-2 gap-12 items-center w-full max-w-7xl mx-auto">
           
-          {/* Left Content */}
-          <div className="relative z-10 text-center md:text-left flex-1">
-            <p className="text-xs sm:text-sm mb-2">≡ Best Gadget & Gear</p>
-            <h1 className="text-3xl sm:text-4xl md:text-6xl font-bold mb-4 md:mb-6">
-              WeGift 3D
-            </h1>
-            <p className="text-gray-300 mb-6 md:mb-8 max-w-md mx-auto md:mx-0 text-sm sm:text-base">
-              There are many variations of passages of available majority 
-              have suffered alteration in injected
+          {/* Left Content - Embla Carousel */}
+          <div className="relative w-full h-[500px] overflow-hidden rounded-2xl bg-transparent">
+            <div className="overflow-hidden w-full h-full" ref={emblaRef}>
+              <div className="flex h-full">
+                {images.map((src, index) => (
+                  <div
+                    key={index}
+                    className="flex-[0_0_100%] relative h-full"
+                  >
+                    <Image
+                      src={src}
+                      alt={`Slide ${index + 1}`}
+                      fill
+                      className="object-contain drop-shadow-2xl"
+                      priority={index === 0}
+                    />
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          {/* Right Content */}
+          <div
+            className={`space-y-8 transform transition-all duration-1000 delay-200 ${
+              isLoaded ? "translate-x-0 opacity-100" : "translate-x-20 opacity-0"
+            }`}
+          >
+            <div className="space-y-4">
+              <h1 className="font-playfair text-5xl lg:text-7xl xl:text-7xl font-semibold leading-tight text-white">
+                Custom 3D Prints
+              </h1>
+              <h2 className="font-playfair text-3xl lg:text-5xl font-medium text-gray-300">
+                Posters • Art • Designs
+              </h2>
+            </div>
+
+            <p className="text-lg lg:text-xl text-gray-400 max-w-md leading-relaxed">
+              Unique 3D printed products, designer posters, and custom orders
+              tailored for you.
             </p>
-            <button className="bg-red-500 hover:bg-red-600 text-white px-6 sm:px-8 py-2 sm:py-3 rounded-lg font-medium text-sm sm:text-base">
-              See All Products
-            </button>
-          </div>
 
-          {/* Right Image */}
-          <div className="relative flex-1 flex justify-center md:justify-end mt-6 md:mt-0">
-            <Image
-              src="/wegift logo.png"
-              alt="Featured Product"
-              width={250}
-              height={250}
-              className="w-40 sm:w-56 md:w-64 h-auto object-contain rounded-2xl shadow-xl"
-            />
-          </div>
+            <div className="pt-4 relative z-10">
+              <button className="bg-white text-black px-8 py-4 text-sm lg:text-base font-semibold tracking-wider hover:bg-gray-100 transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl" onClick={scrollToProducts}>
+                Explore Collection
+              </button>
+            </div>
 
-          {/* Background Graphics (hidden on mobile) */}
-          <div className="hidden md:block absolute right-0 top-0 w-1/2 h-full opacity-10">
-            <div className="absolute top-12 right-12 w-32 h-32 border border-white rounded-full"></div>
-            <div className="absolute top-32 right-32 w-16 h-16 border border-white rounded-full"></div>
-            <div className="absolute bottom-12 right-24 w-24 h-24 border border-white rounded-full"></div>
+            <div className="pt-8 flex items-center absolute right-0" onClick={scrollToNext}>
+              <LiaLongArrowAltDownSolid
+                className="font-extralight text-white animate-bounce"
+                size={64}
+              />
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </section>
   );
-};
-
-export default Index;
+}
